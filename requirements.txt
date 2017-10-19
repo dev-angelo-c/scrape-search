@@ -1,0 +1,4 @@
+mechanize>=0.0.0
+re>=0.0.0
+BeautifulSoup>=0
+HTTPError>=0
