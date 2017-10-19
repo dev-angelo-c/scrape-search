@@ -91,7 +91,7 @@ def startTheShow():
 				print "tryNextPage should now be false: ", tryNextPage
 		
 		except:
-			
+
 			print "Some error with finding new page link..."
 			tryNextPage = False
 
@@ -117,13 +117,19 @@ def inspect_pages(linksToSearch):
 
 	#loop through the list of links we found via our search
 	for i in range(0, len(linksToSearch)):
-		text = br.open(linksToSearch[i]).read()
-		soup = BeautifulSoup(text, 'html.parser')
 
-		foundText = soup.find_all(string=["Contact","CONTACT US", "contact us", "Contact Us", "Telephone", "Email", "email", 'telephone', 'e-mail', 'contact', 'CONTACT']);
-		links_found.append(foundText);
+		print 'searching', linksToSearch[i]
+		try:
+			text = br.open(linksToSearch[i]).read()
+			soup = BeautifulSoup(text, 'html.parser')
 
-	if len(links_found > 0):
+			foundText = soup.find_all(string=["Contact","CONTACT US", "contact us", "Contact Us", "Telephone", "Email", "email", 'telephone', 'e-mail', 'contact', 'CONTACT']);
+			links_found.append(foundText);
+		except UnicodeDecodeError, e:
+			print "UnicodeDecodeError", e
+		except HTTPError, e:
+			print "Http error code: ", e.code
+	if len(links_found) > 0:
 		print len(links_found), "links found"
 		return links_found
 	else:
