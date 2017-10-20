@@ -69,6 +69,10 @@ def startTheShow():
 	
 	print "What is url? ", url
 	
+	#We want to look for the page because we believe that there are more
+	#google pages to search for. Usually google only returns a few hundred
+	#of the millions they advertise(because like all large companies
+	#they are fucking scumbags)
 	tryNextPage = True
 
 	#build a list of urls so we can visit and scrape those pages for contact info.
@@ -108,8 +112,18 @@ def startTheShow():
 	print 'found search pages urls ', source_pages
 	return source_pages
 
-def eval_page():
-	print 'some awesome function to pull some data from a webpage'
+def store_to_file(write_here):
+		print "Storing to File"
+		file_name = ("Enter the name of the file you want to save to: ")
+		file = open(file_name, "w")
+		
+		for i in range(0, len(write_here)):
+			file.write(write_here[i]+'\n')
+
+		file.close()
+
+		print "File writing complete"
+		print "Please refer to your file for url search so that we don't blast or get rejected from google's servers"
 
 def inspect_pages(linksToSearch):
 	print '...execute inspect_pages'
@@ -120,15 +134,19 @@ def inspect_pages(linksToSearch):
 
 		print 'searching', linksToSearch[i]
 		try:
+
 			text = br.open(linksToSearch[i]).read()
 			soup = BeautifulSoup(text, 'html.parser')
-
 			foundText = soup.find_all(string=["Contact","CONTACT US", "contact us", "Contact Us", "Telephone", "Email", "email", 'telephone', 'e-mail', 'contact', 'CONTACT']);
 			links_found.append(foundText);
+
 		except UnicodeDecodeError, e:
 			print "UnicodeDecodeError", e
 		except HTTPError, e:
 			print "Http error code: ", e.code
+		except: 
+			print "ERROR"
+
 	if len(links_found) > 0:
 		print len(links_found), "links found"
 		return links_found
@@ -138,6 +156,7 @@ def inspect_pages(linksToSearch):
 def main():
 	usefulLinks = startTheShow()
 	listOfUsefulPages = inspect_pages(usefulLinks)
+	store_to_file(listOfUsefulPages)
 	print listOfUsefulPages
 
 main()
