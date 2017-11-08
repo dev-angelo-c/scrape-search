@@ -34,6 +34,10 @@ br.set_debug_http(False)
 	
 	### BTW This while loop begins the google search and populates the source_pages Array 
 	#with sites we need to visit for contact info.
+search_title = ''
+excluded_this = ''
+total_results = 0
+pages_until_quit = 0
 def startTheShow(): 
 	
 	#sources of potential contact information
@@ -112,18 +116,17 @@ def startTheShow():
 	print 'found search pages urls ', source_pages
 	return source_pages
 
-def store_to_file(write_here):
-		print "Storing to File"
-		file_name = ("Enter the name of the file you want to save to: ")
-		file = open(file_name, "w")
-		
-		for i in range(0, len(write_here)):
-			file.write(write_here[i]+'\n')
+#store_to_file takes a list? 
+#
+def storeToFile(fn_out, names):
+	outFile = open(fn_out, 'w')
+	for i in range(len(names)):
+		outFile.write(names[i] + ",\n")
+	outFile.close()
+	#return fname
 
-		file.close()
-
-		print "File writing complete"
-		print "Please refer to your file for url search so that we don't blast or get rejected from google's servers"
+	print "File writing complete"
+	print "Please refer to your file for url search so that we don't blast or get rejected from google's servers"
 
 def inspect_pages(linksToSearch):
 	print '...execute inspect_pages'
@@ -155,8 +158,14 @@ def inspect_pages(linksToSearch):
 
 def main():
 	usefulLinks = startTheShow()
+	#currently this just stores the links that we found...
+	# We want it to store the contact info
+	# us
+	fname = raw_input("Enter name of output file: ")
+	storeToFile(fname, usefulLinks)
+
 	listOfUsefulPages = inspect_pages(usefulLinks)
-	store_to_file(listOfUsefulPages)
+	
 	print listOfUsefulPages
 
 main()
