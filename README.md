@@ -9,8 +9,8 @@ Begin by running the file using **pythonw**
 - stores the links the google search returns.  
 - iterates over that lists and vists each page  
 - attempts to locate contact information on that page.  
-- stores that in .csv format.  
+ 
 
 ## Future features  
-- exports email list directly to gdocs.
-- 
+- stores results in .csv format. 
+- exports email list directly to gdocs.  
