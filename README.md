@@ -1,8 +1,5 @@
 # scrape-search
-Build a contact list from a google search
-
-This application is for use with python v2.7 and **NOT python3**  
-Begin by running the file using **pythonw**    
+Build a contact list from a google search  
 
 ## The core of the program
 - queries google for a particular search term.   
