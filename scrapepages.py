@@ -1,8 +1,7 @@
 #pip install -r /path/to/requirements.txt
 import mechanize
-import re
 from bs4 import BeautifulSoup
-from urllib2 import HTTPError
+from urllib3 import HTTPResponse
 # from tkinter import *
 
 # master = Tk()
@@ -14,14 +13,14 @@ from urllib2 import HTTPError
 
 # e1.grid(row=0, column=1)
 # e2.grid(row=1, column=1)
-print 'made it here'
+print('made it here')
 
 br = mechanize.Browser()
 br.set_handle_robots(False)
 br.addheaders = [('user-agent', 'Mozilla/5.1 (X11; U; Linux i686; en-US; rv:1.9.2.3) Gecko/20100423 Ubuntu/10.04 (lucid) Firefox/3.6.3'),
 ('accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8')]
 
-#setting debug to True will print headers
+#setting debug to True will print(headers
 br.set_debug_http(False)
 
 #begin compiling a list off all available links to do searching from...
@@ -47,27 +46,27 @@ def startTheShow():
 	#will need to separate this into two parts and encode the search query
 	#for now it stays for ease of testing
 	baseurl = 'https://www.google.com'
-	print "@@@@@Use quotes to do an exact query search."
-	query_string = raw_input("What query string would you like to use? ").split(" ")
-	exclude_terms = raw_input("Would you like to exclude any terms from your search?(Comma separated)(none to quit) ").split(" ")
+	print("@@@@@Use quotes to do an exact query search.")
+	query_string = input("What query string would you like to use? ").split(" ")
+	exclude_terms = input("Would you like to exclude any terms from your search?(Comma separated)(none to quit) ").split(" ")
 	
 	#build a search query string
 	url = ''	
 	if exclude_terms[0] == 'none':
-		print 'using if'
+		print('using if')
 		url = baseurl + "/search?q="+("+").join(query_string) 
 	elif len(exclude_terms) >= 1 and exclude_terms != "none":
-		print 'using elif'
+		print('using elif')
 		for i in range(0, len(exclude_terms)):
 			url += baseurl + "/search?q=" + ("+").join(query_string) + "+-"+exclude_terms[i];
 	else:
 		try:
-			print 'using else try'
+			print('using else try')
 			url = baseurl + "/search?q="+ ("+").join(query_string)
 		except:
-			print "error setting url: ", url
+			print("error setting url: ", url)
 	
-	print "What is url? ", url
+	print("What is url? ", url)
 	
 	tryNextPage = True
 
@@ -78,41 +77,39 @@ def startTheShow():
 		test = soup.find_all(attrs={'class':'g'})
 		totalResultsFound = soup.find_all(id="resultStats")
 		
-		#search for Next Page button 
-		try:
 		
-			nextPageLink = soup.find_all('span', string='Next')[0].parent.get('href')
-			if nextPageLink:
-				query_string = nextPageLink
-				url = baseurl + query_string
-				print "getting next page..."
-			else:
-				tryNextPage = False
-				print "tryNextPage should now be false: ", tryNextPage
-		
-		except:
-			
-			print "Some error with finding new page link..."
-			tryNextPage = False
-
-		print totalResultsFound[0].getText()
-		
+		# TODO: They use infinite scroll now so 
+		print(totalResultsFound)
+		# In JS it looks like this(kinda)
+		"""
+			combine = link_headers.reduce( (acc=[], val, idx) => {
+				acc.push(
+					{
+						val: val.innerText.split('\n')[0], 
+						url: val.querySelector("cite")
+					}
+				)
+				return acc;
+			}, [] )
+		"""
 		for i in range(0, len(test)-1):
+			
 			#get the url from the list of links we are presented on a page.
 			findSearchableLinks = test[i].find_all('a')[0].get('href').split('&sa')[0].split('q=')[1]
-			print findSearchableLinks
+			print(findSearchableLinks)
+
 			#line.decode('utf-8').strip()
 			source_pages += [str(findSearchableLinks)]
 	
 	#return our results so they may be passed to our inspect pages function in main
-	print 'found search pages urls ', source_pages
+	print('found search pages urls ', source_pages)
 	return source_pages
 
 def eval_page():
-	print 'some awesome function to pull some data from a webpage'
+	print('some awesome function to pull some data from a webpage')
 
 def inspect_pages(linksToSearch):
-	print '...execute inspect_pages'
+	print('...execute inspect_pages')
 	links_found = []
 
 	#loop through the list of links we found via our search
@@ -124,14 +121,14 @@ def inspect_pages(linksToSearch):
 		links_found.append(foundText);
 
 	if len(links_found > 0):
-		print len(links_found), "links found"
+		print(len(links_found), "links found")
 		return links_found
 	else:
-		print "No links found"
+		print("No links found")
 
 def main():
 	usefulLinks = startTheShow()
 	listOfUsefulPages = inspect_pages(usefulLinks)
-	print listOfUsefulPages
+	print(listOfUsefulPages)
 
 main()
